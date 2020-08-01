@@ -19,7 +19,7 @@ export default class SuggestionsModule extends VuexModule {
   field: keyof Suggestion = 'createdAt'
   pageSize = 15
   currentPageSize = 15
-    sortOrder : 'asc' | 'desc' = 'desc';
+  sortOrder: 'asc' | 'desc' = 'desc';
   likedSuggestions: string[] = []
   suggestions: Suggestion[] = []
 
@@ -71,7 +71,7 @@ export default class SuggestionsModule extends VuexModule {
       this.suggestions[suggestionIndex].upVotes++;
     } else {
       this.likedSuggestions.splice(index, 1);
-      this.suggestions[suggestionIndex].upVotes != 0 ? this.suggestions[suggestionIndex].upVotes-- : '';  
+      this.suggestions[suggestionIndex].upVotes != 0 ? this.suggestions[suggestionIndex].upVotes-- : '';
     }
   }
   @Action({ rawError: true })
@@ -83,46 +83,44 @@ export default class SuggestionsModule extends VuexModule {
         .update({
           likedSuggestions: YEE.FieldValue.arrayRemove(id)
         })
-        const updateSuggestion = firestore.collection('suggestions').doc(id).update({
-            'upVotes' : YEE.FieldValue.increment(-1),
-        })
-        await Promise.all([updateUser, updateSuggestion]);
+      const updateSuggestion = firestore.collection('suggestions').doc(id).update({
+        'upVotes': YEE.FieldValue.increment(-1),
+      })
+      await Promise.all([updateUser, updateSuggestion]);
 
     } else {
-        const updateUser = firestore
+      const updateUser = firestore
         .collection('users')
         .doc(authStore.CurrentUser?.uid)
         .update({
           likedSuggestions: YEE.FieldValue.arrayUnion(id)
         })
-        const updateSuggestion = firestore.collection('suggestions').doc(id).update({
-            'upVotes' : YEE.FieldValue.increment(1),
-        })
-        await Promise.all([updateUser, updateSuggestion]);
+      const updateSuggestion = firestore.collection('suggestions').doc(id).update({
+        'upVotes': YEE.FieldValue.increment(1),
+      })
+      await Promise.all([updateUser, updateSuggestion]);
     }
     this.TOGGLE_LIKED_SUGGESTION(id);
     return;
   }
   @Mutation
-  private SET_SORT_BY({field, order} : { field : "createdAt" | "upVotes", order : 'asc' | 'desc', })
-  {
+  private SET_SORT_BY({ field, order }: { field: "createdAt" | "upVotes", order: 'asc' | 'desc', }) {
     this.field = field;
     this.sortOrder = order;
     this.currentPageSize = this.pageSize;
   }
-  @Action({rawError : true})
-  public async SetSortBy(sortBy : "createdAt" | "upVotes")
-  {
-    if(this.field == sortBy || !sortBy) return;
-    switch(sortBy){
-        case "createdAt":
-            this.SET_SORT_BY({field : sortBy, order : 'desc' })
-            break;
-        case "upVotes":
-            this.SET_SORT_BY({field : sortBy, order : 'desc' })
-            break;
+  @Action({ rawError: true })
+  public async SetSortBy(sortBy: "createdAt" | "upVotes") {
+    if (this.field == sortBy || !sortBy) return;
+    switch (sortBy) {
+      case "createdAt":
+        this.SET_SORT_BY({ field: sortBy, order: 'desc' })
+        break;
+      case "upVotes":
+        this.SET_SORT_BY({ field: sortBy, order: 'desc' })
+        break;
     }
-    
+
     return await this.GetSuggestions();
   }
   @Action({ rawError: true })

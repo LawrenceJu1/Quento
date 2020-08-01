@@ -11,54 +11,49 @@
             require(`~/assets/images/homepageBackground.png`) +
             ')'"
         >
-        <template slot="no-body">
-          <div class="my-16 titleContainer">
-            <div>
-          <img
-            src="~/assets/images/QuentoLogoMain.png"
-            class="p-6 inline-flex rounded-full text-white center h-64"
-            alt="Logo"/>
+          <template slot="no-body">
+            <div class="my-16 titleContainer">
+              <div>
+                <img
+                  src="~/assets/images/QuentoLogoMain.png"
+                  class="p-6 inline-flex rounded-full text-white center h-64"
+                  alt="Logo"
+                />
+              </div>
+              <div>
+                <h1 class="mb-12 text-white text-title title">QUENTO</h1>
+              </div>
             </div>
-            <div>
-            <h1 class="mb-12 text-white text-title title">
-            QUENTO 
-          </h1>
-          </div>
-          </div>
 
-          <!-- <feather-icon icon="AwardIcon" class="p-6 mb-8 bg-primary inline-flex rounded-full text-white shadow" svgClasses="h-8 w-8"></feather-icon> -->
-          <div class="vx-row justify-center px-8">
-
-          <!-- <vs-avatar style="width : 5rem; height : 5rem;">
+            <!-- <feather-icon icon="AwardIcon" class="p-6 mb-8 bg-primary inline-flex rounded-full text-white shadow" svgClasses="h-8 w-8"></feather-icon> -->
+            <div class="vx-row justify-center px-8">
+              <!-- <vs-avatar style="width : 5rem; height : 5rem;">
               <img src="https://vignette.wikia.nocookie.net/leagueoflegends/images/6/6a/LoR_Cheers_Emote.png/revision/latest/top-crop/width/300/height/300?cb=20200429081948"/>
-            </vs-avatar> -->
-          </div>
-          
-          <vs-row justify="center" class="vx-row mt-10">
-            <div class="p-6 vx-row md:justify-end justify-center w-full md:w-1/2">
-              <vs-button
-                type="filled"
-                color="#aba6e0"
-                class="vx-col shadow-md  m-4 text-bold"
-                style="font-weight : bold"
-                size="xl"
-                href="https://docs.google.com/forms/d/e/1FAIpQLScrpPrTcpq41DJTXsmu1AvLOBXVHjG7vh2s_Q62M8oPx1ibmA/viewform?usp=sf_link"
-                >Subscribe To News Letter
-                </vs-button>
+              </vs-avatar>-->
             </div>
-            <div w=6 class="p-6 vx-row md:w-1/2 w-full md:justify-start justify-center">
-              <vs-button
-                color="#aba6e0"
-                class="vx-col shadow-md m-4 text-bold"
-                style="font-weight : bold"
-                size="xl"
-                @click="PushSuggestionsPage()"
-                >
-                Suggest Features
-              </vs-button>
-            </div>
-          </vs-row>
-        </template>
+
+            <vs-row justify="center" class="vx-row mt-10">
+              <div class="p-6 vx-row md:justify-end justify-center w-full md:w-1/2">
+                <vs-button
+                  type="filled"
+                  color="#aba6e0"
+                  class="vx-col shadow-md m-4 text-bold"
+                  style="font-weight : bold"
+                  size="xl"
+                  @click="UpdateNewsletter()"
+                >Subscribe to Newsletter</vs-button>
+              </div>
+              <div w="6" class="p-6 vx-row md:w-1/2 w-full md:justify-start justify-center">
+                <vs-button
+                  color="#aba6e0"
+                  class="vx-col shadow-md m-4 text-bold"
+                  style="font-weight : bold"
+                  size="xl"
+                  @click="PushSuggestionsPage()"
+                >Suggest Features</vs-button>
+              </div>
+            </vs-row>
+          </template>
         </VxCard>
       </vs-col>
     </vs-row>
@@ -72,49 +67,71 @@ import { windowStore, authStore } from '~/store'
 
 import VxCard from '~/components/VxCard.vue'
 
+import firestore from '~/plugins/firestore'
+import { firestore as YEE } from 'firebase/app'
+
 @Component({
   layout: 'main',
   components: { VxCard }
 })
 export default class Home extends Vue {
-  pushComingSoon()
-  {
-    this.$router.push('/coming-soon');
+  pushComingSoon() {
+    this.$router.push('/coming-soon')
   }
-  PushSuggestionsPage()
-  {
-    this.$router.push("/suggestions");
+  PushSuggestionsPage() {
+    this.$router.push('/suggestions')
   }
+  async UpdateNewsletter() {
+    const userId = await authStore.user?.uid
+    const asd = await firestore.collection('users').doc(userId).get()
+    console.log({ user: asd.data() })
 
+    const check = asd.data()?.subscribedToNewsletter
+    console.log(check)
+
+    if (check == true) {
+      const changeFalse = await firestore
+        .collection('users')
+        .doc(userId)
+        .update({
+          subscribedToNewsletter: false
+        })
+    }
+    else{
+      const changeTrue = await firestore.collection('users').doc(userId).update({
+      subscribedToNewsletter: true
+    })
+    }
+    // Update user state seperately
+  }
 }
 </script>
 
 <style scoped>
 .title {
-font-family:ginger-bold;
-font-size:14rem;
+  font-family: ginger-bold;
+  font-size: 14rem;
 }
 .titleContainer {
-  display:flex;
+  display: flex;
   justify-content: center;
 }
 
 @media only screen and (max-width: 1200px) {
-.title {
-font-family:ginger-bold;
-font-size:10rem;
-}
-.titleContainer {
-  flex-direction: column;
-  align-items: center;
-
-}
+  .title {
+    font-family: ginger-bold;
+    font-size: 10rem;
+  }
+  .titleContainer {
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
 @media only screen and (max-width: 767px) {
-.title {
-font-family:ginger-bold;
-font-size:15vw;
-}
+  .title {
+    font-family: ginger-bold;
+    font-size: 15vw;
+  }
 }
 </style>
