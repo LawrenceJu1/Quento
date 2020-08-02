@@ -166,12 +166,15 @@ import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import VueTilt from 'vue-tilt.js';
 Vue.use(VueTilt);
 import AOS from 'aos'
+import { newslettersStore } from '~/store'
+
 
 @Component<Splash>({
   components: {
   },
   async mounted()
   {
+   this.GetNewsletters();
    AOS.init();
    this.loading = false;
    window.scrollTo(0,0);
@@ -180,7 +183,18 @@ import AOS from 'aos'
 })
 
 export default class Splash extends Vue {
-
+async GetNewsletters() {
+    try {
+       const newsletters = newslettersStore.GetNewsletters();
+        await Promise.resolve(newsletters);
+        console.log(newsletters)
+    }
+    catch (error)
+    {
+        console.log({error});
+    }
+    return;
+  }
 
    formSubmitted = false;
    loading = true;
