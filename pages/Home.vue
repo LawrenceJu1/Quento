@@ -40,8 +40,9 @@
                   class="vx-col shadow-md m-4 text-bold"
                   style="font-weight : bold"
                   size="xl"
-                  @click="UpdateNewsletter()"
+                  @click="active!=active"
                 >Subscribe to Newsletter</vs-button>
+                <NewsletterModal v-model="active" />
               </div>
               <div w="6" class="p-6 vx-row md:w-1/2 w-full md:justify-start justify-center">
                 <vs-button
@@ -70,16 +71,24 @@ import VxCard from '~/components/VxCard.vue'
 import firestore from '~/plugins/firestore'
 import { firestore as YEE } from 'firebase/app'
 
+import NewsletterModal from '~/screens/NewsletterModal.vue'
 @Component({
   layout: 'main',
-  components: { VxCard }
+  components: { VxCard, NewsletterModal}
 })
 export default class Home extends Vue {
+  active = false
+  email = ''
+  password = ''
+  remember = false
   pushComingSoon() {
     this.$router.push('/coming-soon')
   }
   PushSuggestionsPage() {
     this.$router.push('/suggestions')
+  }
+  pushNewletters() {
+    this.$router.push('/newsletter')
   }
   async UpdateNewsletter() {
     const userId = await authStore.user?.uid
@@ -96,11 +105,13 @@ export default class Home extends Vue {
         .update({
           subscribedToNewsletter: false
         })
-    }
-    else{
-      const changeTrue = await firestore.collection('users').doc(userId).update({
-      subscribedToNewsletter: true
-    })
+    } else {
+      const changeTrue = await firestore
+        .collection('users')
+        .doc(userId)
+        .update({
+          subscribedToNewsletter: true
+        })
     }
     // Update user state seperately
   }
