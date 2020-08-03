@@ -42,7 +42,6 @@
                   size="xl"
                   @click="UpdateNewsletter"
                 >Subscribe to Newsletter</vs-button>
-                <NewsletterModal v-model="active" />
               </div>
               <div w="6" class="p-6 vx-row md:w-1/2 w-full md:justify-start justify-center">
                 <vs-button
@@ -71,10 +70,9 @@ import VxCard from '~/components/VxCard.vue'
 import firestore from '~/plugins/firestore'
 import { firestore as YEE } from 'firebase/app'
 
-import NewsletterModal from '~/screens/NewsletterModal.vue'
 @Component({
   layout: 'main',
-  components: { VxCard, NewsletterModal}
+  components: { VxCard}
 })
 export default class Home extends Vue {
   active = false
