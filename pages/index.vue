@@ -188,7 +188,7 @@ async GetNewsletters() {
        const newsletters = newslettersStore.GetNewsletters();
         await Promise.resolve(newsletters);
         console.log(newsletters)
-    }
+    } 
     catch (error)
     {
         console.log({error});

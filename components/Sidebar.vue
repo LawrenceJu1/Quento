@@ -100,6 +100,12 @@ export default class Sidebar extends Vue {
       id: 'suggestions',
       icon: 'bx bxs-message-square-edit',
       href: '/suggestions'
+    },
+     {
+      name: 'Newsletters',
+      id: 'newsletters',
+      icon: 'bx bxs-news',
+      href: '/newsletters'
     }
   ] as const
 
