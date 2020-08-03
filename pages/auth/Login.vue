@@ -65,11 +65,7 @@
             >.
           </button>
         </vs-col>
-<<<<<<< HEAD
-              <FooterCard />
-=======
         <FooterCard />
->>>>>>> origin/PostedNotes
       </VxCard>
     </vs-col>
   </vs-row>
@@ -128,9 +124,9 @@ export default class Login extends mixins(Auth) {
 }
 .google {
   margin-top: 0.5vw;
-  background: #f4f7f8;
+  background: #DB4437;
   margin-bottom: 2vw;
-  color: #494949;
+  color: white;
   font-family: ginger-normal;
   font-size: 0.8vw;
 }
