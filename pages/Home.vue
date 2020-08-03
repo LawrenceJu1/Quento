@@ -40,7 +40,7 @@
                   class="vx-col shadow-md m-4 text-bold"
                   style="font-weight : bold"
                   size="xl"
-                  @click="active!=active"
+                  @click="UpdateNewsletter"
                 >Subscribe to Newsletter</vs-button>
                 <NewsletterModal v-model="active" />
               </div>
